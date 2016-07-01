@@ -92,18 +92,23 @@
      
      6. masksToBounds
         遮罩
+        注意： frame , contentsGravity , contentsScale
+     
+     _maskLayer = [CALayer layer];
+     _maskLayer.frame = CGRectMake(0, 0, mikuImage.size.width, mikuImage.size.height);
+     _maskLayer.contentsGravity = kCAGravityResizeAspect;
+     _maskLayer.contentsScale = [UIScreen mainScreen].scale;
+     _maskLayer.contents = (__bridge id)mikuImage.CGImage;
+     imageView.layer.mask = _maskLayer;
+     
+     [self performSelector:@selector(zoneOut) withObject:nil afterDelay:1.0f];
+     [self performSelector:@selector(end) withObject:nil afterDelay:10.0f];
      
      */
-    
     _maskLayer = [CALayer layer];
     _maskLayer.frame = CGRectMake(0, 0, mikuImage.size.width, mikuImage.size.height);
-    _maskLayer.contentsGravity = kCAGravityResizeAspect;
-    _maskLayer.contentsScale = [UIScreen mainScreen].scale;
-    _maskLayer.contents = (__bridge id)mikuImage.CGImage;
-    imageView.layer.mask = _maskLayer;
     
-    [self performSelector:@selector(zoneOut) withObject:nil afterDelay:1.0f];
-    [self performSelector:@selector(end) withObject:nil afterDelay:10.0f];
+    
     /*
      
      7. cornerRadius
@@ -119,14 +124,14 @@
     
     static float opacity;
     
-    [_maskLayer setFrame:CGRectMake(_maskLayer.frame.origin.x - _maskLayer.frame.size.width*0.02,
-                                    _maskLayer.frame.origin.y - _maskLayer.frame.size.height*0.02,
-                                    _maskLayer.frame.size.width*1.05,
-                                    _maskLayer.frame.size.height*1.05)];
+    [_maskLayer setFrame:CGRectMake(_maskLayer.frame.origin.x - _maskLayer.frame.size.width*0.005,
+                                    _maskLayer.frame.origin.y - _maskLayer.frame.size.height*0.005,
+                                    _maskLayer.frame.size.width*1.01,
+                                    _maskLayer.frame.size.height*1.01)];
     opacity = _maskLayer.opacity - 0.01;
     [_maskLayer setOpacity:opacity];
     
-    [self performSelector:@selector(zoneOut) withObject:nil afterDelay:0.05f];
+    [self performSelector:@selector(zoneOut) withObject:nil afterDelay:0.01f];
 }
 
 -(void)end{
