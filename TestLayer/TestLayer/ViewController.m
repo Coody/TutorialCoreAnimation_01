@@ -9,7 +9,7 @@
 #import "ViewController.h"
 
 @interface ViewController ()
-
+@property (nonatomic , strong) CALayer *maskLayer;
 @end
 
 @implementation ViewController
@@ -95,14 +95,15 @@
      
      */
     
-    CALayer *maskLayer = [CALayer layer];
-    maskLayer.frame = CGRectMake(0, 0, mikuImage.size.width, mikuImage.size.height);
-    maskLayer.contentsGravity = kCAGravityResizeAspect;
-    maskLayer.contentsScale = [UIScreen mainScreen].scale;
-    maskLayer.contents = (__bridge id)mikuImage.CGImage;
-    imageView.layer.mask = maskLayer;
+    _maskLayer = [CALayer layer];
+    _maskLayer.frame = CGRectMake(0, 0, mikuImage.size.width, mikuImage.size.height);
+    _maskLayer.contentsGravity = kCAGravityResizeAspect;
+    _maskLayer.contentsScale = [UIScreen mainScreen].scale;
+    _maskLayer.contents = (__bridge id)mikuImage.CGImage;
+    imageView.layer.mask = _maskLayer;
     
-    
+    [self performSelector:@selector(zoneOut) withObject:nil afterDelay:1.0f];
+    [self performSelector:@selector(end) withObject:nil afterDelay:10.0f];
     /*
      
      7. cornerRadius
@@ -112,6 +113,24 @@
     
     
     
+}
+
+-(void)zoneOut{
+    
+    static float opacity;
+    
+    [_maskLayer setFrame:CGRectMake(_maskLayer.frame.origin.x - _maskLayer.frame.size.width*0.02,
+                                    _maskLayer.frame.origin.y - _maskLayer.frame.size.height*0.02,
+                                    _maskLayer.frame.size.width*1.05,
+                                    _maskLayer.frame.size.height*1.05)];
+    opacity = _maskLayer.opacity - 0.01;
+    [_maskLayer setOpacity:opacity];
+    
+    [self performSelector:@selector(zoneOut) withObject:nil afterDelay:0.05f];
+}
+
+-(void)end{
+    [[self class] cancelPreviousPerformRequestsWithTarget:self];
 }
 
 - (void)didReceiveMemoryWarning {
